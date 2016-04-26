@@ -39,14 +39,14 @@ practice data analysis to get a feel for R and its capabilities.
 - http://trevorstephens.com/post/72916401642/titanic-getting-started-with-r
 - http://rforwork.info/2012/12/23/binary-classification-a-comparison-of-titanic-proportions-between-logistic-regression-random-forests-and-conditional-trees/
 - https://www.kaggle.com/c/titanic/forums/t/4693/is-cabin-an-important-predictor/25690
-- https://inclass.kaggle.com/c/deloitte-tackles-titanic/forums/t/9841/getting-high-scores-without-looking-at-actual-data-set/;w
+- https://inclass.kaggle.com/c/deloitte-tackles-titanic/forums/t/9841/getting-high-scores-without-looking-at-actual-data-set/
 
 ### Generating the report
 Execute the following command from the root of the repo in your shell
 of choice. It assumes *Knitr* has been installed.
 ```
 # from CLI
-> Rscript -e "library(knitr); knit::spin('./src/main.r')"
+> Rscript -e "library(knitr); knitr::spin('./src/main.r')"
 
 # from R prompt
 > library(knitr)

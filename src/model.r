@@ -224,7 +224,7 @@ glmFit9 <- train(Fate ~ Class + Sex + Title + Age + Embarked + FamilyCount + PcS
 #' ---
 #' NOTE: These models can take a while to train, hang in there...
 #'
-#' ### Ada boosted tree model
+#' #### Ada boosted tree model
 #' Boosting constitutes an ensemble model as an iterative algo that combines
 #' simple classification rules with 'mediocre' performance in terms of
 #' misclassification error rate to produce highly accurate classification
@@ -261,7 +261,7 @@ adaFit <- train(Fate ~ Class + Sex + Title + Age + Embarked + FamilyCount + PcSu
 varplot(adaFit$finalModel)
 print(adaFit)
 
-#' ### Random forest
+#' #### Random forest
 #' The (in)famous rf model. This is an ensemble method similar to bagged
 #' trees (performed with boostrap aggregation), whereby observations are
 #' resampled and predictions are recalculated, with majority vote ruling
@@ -292,7 +292,7 @@ importance(rfFit$finalModel)
 varImpPlot(rfFit$finalModel)
 print(rfFit)
 
-#' ### Conditional forest
+#' #### Conditional forest
 #' An alternative to random forests which handle factor co-variates with
 #' many levels better than their better known brethren. A tuning grid with
 #' the same tuning grid as the random forest was created, and the same

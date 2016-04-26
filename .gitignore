@@ -1,4 +1,4 @@
-.rda
+*.rda
 Titanic_predictions.csv
 *.md
 *.md.html
