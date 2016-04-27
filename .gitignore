@@ -1,3 +1,5 @@
+.RData
+.Rhistory
 *.rda
 Titanic_predictions.csv
 *.md

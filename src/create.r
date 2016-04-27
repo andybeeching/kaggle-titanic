@@ -189,7 +189,7 @@ combi$SbSurvived <- factor(combi$SbSurvived)
 #' *FamilyID* has too many levels to be practical, so re-assign any families
 #' with less than 5 members an ID of "small" to facilitate analysis (so the
 #' feature doesn't dominate models, especially those which are tree-based).
-combi$FamilyID[combi$FamilyCount <= 4] <- "Small"
+combi$FamilyID[which(as.numeric(combi$FamilyCount) <= 4)] <- "Small"
 combi$FamilyID <- factor(combi$FamilyID)
 
 #' ### Create "CabinKnown" feature
@@ -220,7 +220,7 @@ combi$Side <- as.factor(sides)
 #' Finally prepare the dataset for modelling:
 #' - Pare down the dataframe to relevant features
 #' - Split combi back into the original "train" and "test" sets
-#' - Create further "training" (__tr__) and "validation" (__CV__) datasets
+#' - Create further "training" (__tr__) and "validation" (__cv__) datasets
 #' at a split of 85/15.
 #' - Ratio chosen due to small sample size (more data for the model)
 #' - The names were chosen for brevity, and not to clash with the train()
@@ -253,3 +253,4 @@ cv <- raw.munged[-inTrain,]
 writeLines("\n-------------")
 writeLines("Feature engineering DONE")
 # */
+

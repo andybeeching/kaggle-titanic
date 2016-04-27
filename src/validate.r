@@ -77,8 +77,8 @@ bwplot(cvResults) # from lattice
 #' of models using the cIn the below example on GLM models are
 #' TODO: Add raw data input for training
 plotLearningCurves(
-  models     = list(glmFit8, glmFit9),
-  labels     = c("Glm2", "Glm9", "Glm10"),
+  models     = list(glmFit2, glmFit9),
+  labels     = c("Glm2", "Glm9"),
   metric     = "ROC",
   ctrlFn     = fitControl,
   cv         = cv,

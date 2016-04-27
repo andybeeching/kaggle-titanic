@@ -29,20 +29,20 @@
 #' </dl>
 #'
 #' #### Family Relation Details
-#' With respect to the family relation variables (i.e. *Sibsp* and *Parch*)
-#' some relations were ignored. The following are the definitions used
-#' for sibsp and parch (aboard Titanic):
-#'
+#' With respect to the family relation variables (i.e. *Sibsp* and
+#' *Parch*) some relations were ignored. The following are the
+#' definitions used for sibsp and parch (aboard Titanic):
 #' - Sibling: Brother, Sister, Stepbrother, or Stepsister of Passenger
-#' - Spouse: Husband or Wife of Passenger (Mistresses and Fiances Ignored)
+#' - Spouse: Husband or Wife of Passenger (Mistresses and Fiances
+#'   ignored)
 #' - Parent: Mother or Father of Passenger
 #' - Child: Son, Daughter, Stepson, or Stepdaughter of Passenger
 #'
 #' Other family relatives excluded from this study include cousins,
-#' nephews/nieces, aunts/uncles, and in-laws. Some children travelled only
-#' with a nanny, therefore `parch=0` for them. As well, some travelled with
-#' very close friends or neighbors in a village, however, the definitions do
-#' not support such relations.
+#' nephews/nieces, aunts/uncles, and in-laws. Some children travelled
+#' only with a nanny, therefore `parch=0` for them. As well, some
+#' travelled with very close friends or neighbors in a village, however,
+#' the definitions do not support such relations.
 
 # /*
 writeLines("\n-------------")

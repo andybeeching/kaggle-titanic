@@ -26,9 +26,9 @@ writeLines("Modelling: Glm logistic, CART, Boosting and Ensembles")
 #' `caret`) is specified as the summary function in order to to compute
 #' the sensitivity, specificity and AUC.
 #'
-#' The training control function is also configured to compute the class
-#' probabilities for held-out samples during the resample for the
-#' performance comparison.
+#' The training control function is also configured to compute the
+#' class probabilities for held-out samples during the resample for
+#' the performance comparison.
 fitControl <- trainControl(
   method = "repeatedcv",
   number = 10,
@@ -38,8 +38,7 @@ fitControl <- trainControl(
 )
 
 #' ### Basic CART model
-#' Fit a classification tree to view important splits. These turned out
-#' to be "Title", "Class", "Family"
+#' Fit a classification tree to view important splits.
 set.seed(SEED)
 
 treeFit = tree(Fate ~ .,
@@ -77,13 +76,13 @@ glmFit1 <- train(Fate ~ .,
   trControl = fitControl
 )
 
-#' ### Basic GLM
+#' #### Basic GLM
 #' Try a model with the selected variables in inferred order of
 #' importance.
 set.seed(SEED)
 
-glmFit2 <- train(Fate ~
-  Sex + Class + Age + FamilyCount + Embarked + FareLog + BoatPriority,
+glmFit2 <- train(Fate ~ Sex + Class + Age + FamilyCount + Embarked +
+  FareLog + BoatPriority,
   data = tr,
   method = "glm",
   metric = "ROC",
@@ -92,33 +91,28 @@ glmFit2 <- train(Fate ~
 
 # /*
 # Model: Logistic Regression with interaction variables
-#   - Use this to view key interactions for potential class compression.
-#   - Interactions between Sex, Class & Title
-#   - Key interactions were Sexmale:ClassMiddle, and ClassMiddle:TitleMaster,
-#   - table(tr[tr$Sex == "Male" & tr$Class == "Middle", c("Fate", "Class")])
-#     reveals the majority of males in Middle Class perished.
-#   - tr[tr$Title == "Master", c("Fate", "Class")] reveals that all "masters"
-#     travelling in Middle class in tr set Survived.
 set.seed(SEED)
 
-glmFit3 <- train(Fate ~ Sex + Class + Title + Sex*Class + Sex*Class*Title,
+glmFit3 <- train(Fate ~ Sex + Class + Title + Sex*Class +
+  Sex*Class*Title,
   data = tr,
   method = "glm",
   metric = "ROC",
   trControl = fitControl
 )
-
 # */
 
 #' #### GLM with interaction variables
-#' Used to discern key interactions for potential class compression. In the
-#' following model the interaction between *ClassLower:PcSurvived* was
-#' deemed significant. `tr[tr$PcSurvived == 1, c("Fate", "Class")]` reveals
-#' that most people travelling in lower class with a Parent/child who
+#' Used to discern key interactions for potential class compression.
+#' In the following model the interaction between
+#' *ClassLower:PcSurvived* was deemed significant.
+#' `tr[tr$PcSurvived == 1, c("Fate", "Class")]` reveals that most
+#' people travelling in lower class with a Parent/child who
 #' survived, also survived (in the training set).
 set.seed(SEED)
 
-glmFit4 <- train(Fate ~ Class + Sex + Title + Sex*Embarked + Class*PcSurvived*SbSurvived,
+glmFit4 <- train(Fate ~ Class + Sex + Title + Sex*Embarked +
+  Class*PcSurvived*SbSurvived,
   data = tr,
   method = "glm",
   metric = "ROC",
@@ -127,13 +121,10 @@ glmFit4 <- train(Fate ~ Class + Sex + Title + Sex*Embarked + Class*PcSurvived*Sb
 
 # /*
 # Model: Logistic Regression with class compression
-#
-#   - Compress classes for men travelling in 3rd class
-#   - Swap Age for Title
-#   - Drop various other covariates and add back in to view difference
 set.seed(SEED)
 
-glmFit5 <- train(Fate ~ Sex + Class + Title + I(Title=="Mr"&Class=="Lower"),
+glmFit5 <- train(Fate ~ Sex + Class + Title +
+  I(Title=="Mr"&Class=="Lower"),
   data = tr,
   method = "glm",
   metric = "ROC",
@@ -141,8 +132,6 @@ glmFit5 <- train(Fate ~ Sex + Class + Title + I(Title=="Mr"&Class=="Lower"),
 )
 
 # Model: Logistic Regression with class compression
-#
-#   - Compress classes for men travelling in 3rd class
 set.seed(SEED)
 
 glmFit6 <- train(Fate ~ Sex + Class + Title +
@@ -169,13 +158,13 @@ glmFit7 <- train(Fate ~ Sex + Class + Title + PcSurvived + SbSurvived +
   metric = "ROC",
   trControl = fitControl
 )
-
 # */
 
 #' #### GLM with class compression
 #' In this model a number of important features have been added as
-#' covariates alongside some engineered features capturing various important
-#' interactions identified previously. This submission scored 0.79904
+#' covariates alongside some engineered features capturing various
+#' important interactions identified previously. This submission
+#' scored 0.79904
 set.seed(SEED)
 
 glmFit8 <- train(Fate ~ Sex + Class + Title + PcSurvived + SbSurvived +
@@ -201,47 +190,48 @@ glmFit9 <- train(Fate ~ Class + Sex + Title + Age + Embarked + FamilyCount + PcS
   metric = "ROC",
   trControl = fitControl
 )
+# */
 
 #' ### Tree Models
-#' After training increasingly complex GLM models next comes a very popular
-#' type of model for classification problems - tree-based models. Although
-#' the first CART model didn't yield any great insight, other tree-based
-#' methods are far more sophisticated in nature, able to run thousands of
-#' permutations and combine them to create a highly optimised and complex
-#' models.
+#' After training increasingly complex GLM models next comes a very
+#' popular type of model for classification problems - tree-based
+#' models. Although the first CART model didn't yield any great
+#' insight, other tree-based methods are far more sophisticated in
+#' nature, able to run thousands of permutations and combine them to
+#' create a highly optimised and complex models.
 #'
-#' To keep it fair between different model types (not too mention simple!)
-#' the same formula was used to fit each model:
-#' `Fate ~ Class + Sex + Title + Age + Embarked + FamilyCount + PcSurvived + SbSurvived + FareLog'
+#' To keep it fair between different model types (not too mention
+#' simple!) the same formula was used to fit each model:
+#' `Fate ~ Class + Sex + Title + Age + Embarked + FamilyCount + PcSurvived + SbSurvived + FareLog'`
 #'
-#' The features listed as co-variates were derived from the best of the GLM
-#' models. Those excluded were deemed superfluous due to their lack of
-#' effect on the deviance change in the models they were included.
+#' The features listed as co-variates were derived from the best of
+#' the GLM models. Those excluded were deemed superfluous due to
+#' their lack of effect on the deviance change in the models they
+#' were included.
 #'
-#' Finally, in all cases the same training control function used to train the
-#' GLM logistic regression models was re-purposed.
+#' Finally, in all cases the same training control function used to
+#' train the GLM logistic regression models was re-purposed.
 #'
 #' ---
 #' NOTE: These models can take a while to train, hang in there...
 #'
 #' #### Ada boosted tree model
-#' Boosting constitutes an ensemble model as an iterative algo that combines
-#' simple classification rules with 'mediocre' performance in terms of
-#' misclassification error rate to produce highly accurate classification
-#' rule.
+#' Boosting constitutes an ensemble model as an iterative algo that
+#' combines simple classification rules with 'mediocre' performance
+#' in terms of misclassification error rate to produce highly
+#' accurate classification rule.
 #'
-#' Ada is statistical boosting based on additive logistic regression. Here
-#' classification trees are generated via rpart and the caret package
-#' constitute the base classifiers.
+#' Ada is statistical boosting based on additive logistic regression.
+#' Here classification trees are generated via rpart and the caret
+#' package constitute the base classifiers.
 #'
-#' For this model a tuning grid configured for varying iterations (25 & 50),
-#' maxdepth (4 & 6), and nu shrinkage parameter (0.1 & 1) was created.. All
-#' permutations were exercised. The best model was based on 50 iterations,
-#' with maxdepth of 4 and nu of 0.1.
+#' For this model a tuning grid configured for varying iterations
+#' (25 & 50), maxdepth (4 & 6), and nu shrinkage parameter (0.1 & 1)
+#' was created. All permutations were exercised.
 #'
-#' One can also visualise feature variance with `varplot()` from the ada
-#' package. The model reported an accuracy of 0.84, and scored 0.80383 on
-#' Kaggle's leaderboard.
+#' One can also visualise feature variance with `varplot()` from the
+#' ada package. The model reported an accuracy of 0.84, and scored
+#' 0.80383 on Kaggle's leaderboard.
 set.seed(SEED)
 
 adaGrid <- expand.grid(
@@ -250,7 +240,8 @@ adaGrid <- expand.grid(
   .nu = c(0.1, 1)
 )
 
-adaFit <- train(Fate ~ Class + Sex + Title + Age + Embarked + FamilyCount + PcSurvived + SbSurvived + FareLog,
+adaFit <- train(Fate ~ Class + Sex + Title + Age + Embarked +
+  FamilyCount + PcSurvived + SbSurvived + FareLog,
   data = tr,
   method = "ada",
   metric = "ROC",
@@ -262,20 +253,20 @@ varplot(adaFit$finalModel)
 print(adaFit)
 
 #' #### Random forest
-#' The (in)famous rf model. This is an ensemble method similar to bagged
-#' trees (performed with boostrap aggregation), whereby observations are
-#' resampled and predictions are recalculated, with majority vote ruling
-#' dictating the best model.
+#' The (in)famous rf model. This is an ensemble method similar to
+#' bagged trees (performed with boostrap aggregation), whereby
+#' observations are resampled and predictions are recalculated, with
+#' majority vote dictating the best model.
 #'
-#' Random forests also bootstrap the variables at each split in the tree and
-#' use the Out-of-Bag Error rate to evaluate strength of model, correlation
-#' between models, and variable importance.
+#' Random forests also bootstrap the variables at each split in the
+#' tree and use the Out-of-Bag Error rate to evaluate strength of
+#' model, correlation between models, and variable importance.
 #'
 #' For this model a tuning grid with mtry set to 3 (as per Strobl et al
 #' advice that this value should equate to the sq.root of number of
-#' covariates - 9) was created. Variable importance was determined using the
-#' `importance()` fn from the random forest package. They are ranked by
-#' the Gini purity metric. This model scored 0.81340
+#' covariates - 9) was created. Variable importance was determined
+#' using the `importance()` fn from the random forest package. They
+#' are ranked by the Gini purity metric. This model scored 0.81340
 set.seed(SEED)
 
 rfGrid <- expand.grid(.mtry = c(3))
@@ -293,10 +284,10 @@ varImpPlot(rfFit$finalModel)
 print(rfFit)
 
 #' #### Conditional forest
-#' An alternative to random forests which handle factor co-variates with
-#' many levels better than their better known brethren. A tuning grid with
-#' the same tuning grid as the random forest was created, and the same
-#' variables used to discern important variables.
+#' An alternative to random forests which handle factor co-variates
+#' with many levels better than their better known brethren. A tuning
+#' grid with the same tuning grid as the random forest was created,
+#' and the same variables used to discern important variables.
 #'
 #' Ultimately it scored 0.80861, lower than the random forest model.
 set.seed(SEED)
@@ -389,7 +380,7 @@ ensembleList <- caretList(Fate ~ Class + Sex + Title + Age + Embarked + FamilyCo
 
 ensembleFit  <- caretEnsemble(ensembleList)
 
-# */
+# /*
 writeLines("\n-------------")
 writeLines("Modelling: DONE")
 # */

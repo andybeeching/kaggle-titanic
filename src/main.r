@@ -24,8 +24,6 @@ writeLines('-------------')
 writeLines('\nStart: Reset workspace, load dependencies & source data')
 # */
 
-SEED <- 83;
-
 #+ suppress-warnings, include = FALSE
 if (isTRUE(getOption("knitr.in.progress"))) {
   knitr::opts_chunk$set(message = FALSE, warning = FALSE)
@@ -35,9 +33,11 @@ if (isTRUE(getOption("knitr.in.progress"))) {
 
 rm(list=ls())
 par(mfrow=c(1,1))
+SEED <- 83;
 
 library(Amelia)        # for missmap()
 library(tree)          # for exploring
+library(pROC)          # for modelling - otherwise caret seems to fail
 library(caret)         # for modelling
 library(caretEnsemble) # for modelling
 library(discern)       # for analysis - install_github('andybeeching/discern')
@@ -53,8 +53,6 @@ library(discern)       # for analysis - install_github('andybeeching/discern')
 ts <- date()
 raw <- read.csv('../data/train.csv')
 test <- read.csv('../data/test.csv')
-save(raw, ts, file="../data/raw.rda")
-save(test, ts, file="../data/test.rda")
 
 # /*
 # reference modules to prepare data for modelling
@@ -62,13 +60,13 @@ save(test, ts, file="../data/test.rda")
 #    runtime cost of training models and running validation tests.
 # */
 if (isTRUE(getOption("knitr.in.progress"))) {
-  knitr::spin_child('clean')
+  knitr::spin_child('clean.r')
   knitr::spin_child('explore.r')
   knitr::spin_child('create.r')
   knitr::spin_child('model.r')
-  knitr::spin_child('analyse.r')
+  knitr::spin_child('validate.r')
 } else {
-  source('clean')
+  source('clean.r')
   source('explore.r')
   source('create.r')
   source('model.r')
@@ -79,13 +77,13 @@ if (isTRUE(getOption("knitr.in.progress"))) {
 #' Predict the response variable *Survived* for the original test
 #' dataset. Through submission the best result was in fact random
 #' forest, so this is the model referenced in the script.
-predictions <- predict(ensembleFit, newdata = test.munged)
+Survived <- predict(rfFit, newdata = test.munged)
 
 #' Re-level vector to binary response, associate with passenger ID,
 #' and write CSV file.
-predictions <- round(predictions)
-levels(predictions) <- c(0, 1)
-output <- as.data.frame(predictions)
+Survived <- round(Survived)
+levels(Survived) <- c(0, 1)
+output <- as.data.frame(Survived)
 output$PassengerId <- test$PassengerId
 write.csv(output[,c("PassengerId", "Survived")],
           file="../Titanic_predictions.csv", row.names=FALSE, quote=FALSE)
