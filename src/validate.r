@@ -22,7 +22,6 @@
 plotROC(
   models    = list(glmFit2, glmFit9, rfFit, cfFit, adaFit),
   res       = "Fate",
-  predictor = "Survived",
   cv        = cv,
   colors    = c("orange", "green", "blue", "yellow", "red"),
   labels    = c("glmFit2", "glmFit9", "rfFit", "cfFit", "adaFit")
@@ -41,21 +40,20 @@ cvResults <- resamples(list(
   glm2 = glmFit2,
   glm8 = glmFit8,
   glm9 = glmFit9,
-  ada = adaFit,
-  rf = rfFit,
-  rf2 = rfFit,
-  cf = cfFit,
-  svm = svmFit
+  ada  = adaFit,
+  rf   = rfFit,
+  rf2  = rfFit,
+  cf   = cfFit,
+  svm  = svmFit
 ))
 summary(cvResults)
 dotplot(cvResults, metric="ROC")
 bwplot(cvResults) # from lattice
 
 #' ### Learning curves
-#' An important facet to assert in relation to the performance of any
-#' model and its overall generalisability, is determining whether it
-#' may be inherently biased (overfit), or conversely contain too much
-#' variance (underfit).
+#' An important performance facet to examine for any model is its overall
+#' generalisability, that is, determine whether it may be inherently biased
+#' (overfit), or conversely contain too much variance (underfit).
 #'
 #' One way to assert bias vs variance in a model is to plot how well
 #' it performs when trained on increasingly larger amounts of data.
@@ -70,20 +68,20 @@ bwplot(cvResults) # from lattice
 #' Ideally the curve would oscillate a little at the start as the
 #' amount of data used to train the model doubles and triples, but
 #' then flatten out as observations normalise and fill-out the
-#' problem space.
+#' observation space.
 #'
 #' Once more a method from the "discern" package is used to perform
 #' the above analysis. `plotLearningCurves` iteratively trains a list
 #' of models using the cIn the below example on GLM models are
-#' TODO: Add raw data input for training
 plotLearningCurves(
-  models     = list(glmFit2, glmFit9),
-  labels     = c("Glm2", "Glm9"),
-  metric     = "ROC",
-  ctrlFn     = fitControl,
-  cv         = cv,
-  colors     = c("orange", "blue"),
-  seed       = SEED
+  models = list(glmFit2, glmFit9),
+  labels = c("Glm2", "Glm9"),
+  metric = "ROC",
+  ctrlFn = fitControl,
+  df     = tr,
+  cv     = cv,
+  colors = c("orange", "blue"),
+  seed   = SEED
 )
 
 # /*

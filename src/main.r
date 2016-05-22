@@ -37,7 +37,6 @@ SEED <- 83;
 
 library(Amelia)        # for missmap()
 library(tree)          # for exploring
-library(pROC)          # for modelling - otherwise caret seems to fail
 library(caret)         # for modelling
 library(caretEnsemble) # for modelling
 library(discern)       # for analysis - install_github('andybeeching/discern')
